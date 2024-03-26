@@ -10,6 +10,7 @@ import {
   TransactionListScreen,
 } from "../screens";
 import { Screen } from "../utils";
+import { AppTabBar } from "../components";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -32,13 +33,18 @@ const TransactionStack = () => {
 const Route = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Navigator
+        screenOptions={{ headerShown: false }}
+        tabBar={(props) => <AppTabBar {...props} />}
+      >
         <Tab.Screen
           name={Screen.TransactionStack}
           component={TransactionStack}
-        //   options={{ title: "Transactions", tabBarIcon: "list" }}
         />
-        <Tab.Screen name={Screen.InfoScreen} component={InfoScreen} />
+        <Tab.Screen
+          name={Screen.InfoScreen}
+          component={InfoScreen}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

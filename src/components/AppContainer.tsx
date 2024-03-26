@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    backgroundColor: Color.background,
+    backgroundColor: Color.white,
   },
   topSafeArea: {
-    backgroundColor: Color.white,
+    backgroundColor: Color.themeBlue,
   },
   bottomSafeArea: {
-    backgroundColor: Color.white,
+    backgroundColor: Color.themeBlue,
   },
 });
