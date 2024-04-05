@@ -7,25 +7,50 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
 // Relative Imports
-import { AppContainer } from "../../components";
-import { transactionList } from "../../utils/Data";
+import { AppContainer, AppHeader } from "../../components";
 import { Color, Images, Responsive, Screen } from "../../utils";
-import { AppHeader } from "../../components";
+
+const TRANSACTION_LIST = "transactions";
+const FirestoreTransactions = firestore().collection(TRANSACTION_LIST);
 
 interface TransactionListScreenProps {
   navigation: any;
 }
 
 const TransactionListScreen: React.FC<TransactionListScreenProps> = (props) => {
+  const [transactionList, setTransactionList] = useState([]);
   const onPressItem = (item: any) => {
     const { navigation } = props;
     navigation.navigate(Screen.TransactionDetailScreen, { item });
   };
+
+  const onPressAdd = () => {
+    const { navigation } = props;
+    navigation.navigate(Screen.AddTransactionScreen);
+  };
+
+  useEffect(() => {
+    getTransactionList();
+    const subscriber = FirestoreTransactions.onSnapshot(setReceivedData);
+    return () => subscriber();
+  }, []);
+
+  const getTransactionList = async () => {
+    FirestoreTransactions.get().then(setReceivedData);
+  };
+
+  const setReceivedData = (transactions: any) => {
+    const tempList = [];
+    transactions.docs.map((doc: any) => tempList.push(doc.data()));
+    setTransactionList(tempList);
+  };
+
   return (
     <AppContainer>
-      <AppHeader />
+      <AppHeader isAddButton onPressAdd={onPressAdd} />
       <View style={styles.mainContainer}>
         <FlatList
           data={transactionList}

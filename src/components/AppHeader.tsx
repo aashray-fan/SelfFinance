@@ -14,10 +14,11 @@ interface AppHeaderProps {
   isAddButton?: boolean;
   titleText?: string;
   onPressBack?: TouchableOpacityProps["onPress"];
+  onPressAdd?: TouchableOpacityProps["onPress"];
 }
 
 const AppHeader: React.FC<AppHeaderProps> = (props) => {
-  const { titleText, onPressBack, isAddButton, isBackButton } = props;
+  const { titleText, onPressBack, isAddButton, isBackButton, onPressAdd } = props;
   return (
     <View style={styles.mainView}>
       {isBackButton ? (
@@ -29,7 +30,7 @@ const AppHeader: React.FC<AppHeaderProps> = (props) => {
       )}
       <Text style={styles.titleText}>{titleText}</Text>
       {isAddButton ? (
-        <TouchableOpacity style={styles.backTouch}>
+        <TouchableOpacity style={styles.backTouch} onPress={onPressAdd}>
           <Image source={Images.add} style={styles.backImg} />
         </TouchableOpacity>
       ) : (
@@ -46,6 +47,7 @@ AppHeader.defaultProps = {
   isBackButton: false,
   titleText: "Transactions",
   onPressBack: () => console.log("onPressBack"),
+  onPressAdd: () => console.log("onPressAdd"),
 };
 
 const styles = StyleSheet.create({
@@ -70,8 +72,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   backImg: {
-    width: "80%",
-    height: "80%",
+    width: "65%",
+    height: "65%",
     tintColor: Color.black,
   },
 });

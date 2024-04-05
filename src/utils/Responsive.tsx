@@ -17,10 +17,13 @@ const guidelineBaseHeight = 812;
 const scale = (size: number) => (shortDimension / guidelineBaseWidth) * size;
 const verticalScale = (size: number) =>
   (longDimension / guidelineBaseHeight) * size;
+const moderateScale = (size: number, factor = 0.5) =>
+  size + (scale(size) - size) * factor;
 
 const Responsive = {
   font,
   scale,
   verticalScale,
+  moderateScale,
 };
 export default Responsive;

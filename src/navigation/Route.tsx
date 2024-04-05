@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // Relative Imports
 import {
+  AddTransactionScreen,
   InfoScreen,
   TransactionDetailScreen,
   TransactionListScreen,
@@ -21,6 +22,10 @@ const TransactionStack = () => {
       <Stack.Screen
         name={Screen.TransactionListScreen}
         component={TransactionListScreen}
+      />
+      <Stack.Screen
+        name={Screen.AddTransactionScreen}
+        component={AddTransactionScreen}
       />
       <Stack.Screen
         name={Screen.TransactionDetailScreen}
@@ -41,10 +46,7 @@ const Route = () => {
           name={Screen.TransactionStack}
           component={TransactionStack}
         />
-        <Tab.Screen
-          name={Screen.InfoScreen}
-          component={InfoScreen}
-        />
+        <Tab.Screen name={Screen.InfoScreen} component={InfoScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );

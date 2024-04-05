@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "152049045711",
+    "project_id": "selffinance-30c02",
+    "storage_bucket": "selffinance-30c02.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:152049045711:android:afedf8c678b4f5baa2e7ba",
+        "android_client_info": {
+          "package_name": "com.selffinance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3pRQ7KK9NWxUU6tZR3KujWuYpRHzpCYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

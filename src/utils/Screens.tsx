@@ -3,6 +3,7 @@ const Screen = {
   TransactionDetailScreen: "TransactionDetailScreen",
   InfoScreen: "InfoScreen",
   TransactionStack: "TransactionStack",
+  AddTransactionScreen: "AddTransactionScreen",
 };
 
 export default Screen;
