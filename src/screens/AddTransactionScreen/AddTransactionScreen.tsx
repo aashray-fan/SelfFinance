@@ -1,10 +1,20 @@
 // Library Imports
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
+import firestore from "@react-native-firebase/firestore";
+
 // Relative Imports
 import { AppHeader, AppContainer, AppTextInput } from "../../components";
 import { Color, Responsive } from "../../utils";
-import App from "../../../App";
+
+const TRANSACTION_LIST = "transactions";
+const FirestoreTransactions = firestore().collection(TRANSACTION_LIST);
 
 // Interface
 interface AddTransactionScreenProps {
@@ -17,10 +27,17 @@ const AddTransactionScreen: React.FC<AddTransactionScreenProps> = (props) => {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
 
-  const onPressBack = () => {
-    navigation.goBack();
+  const onPressBack = () => navigation.goBack();
+
+  const addTransaction = () => {
+    FirestoreTransactions.add({ title, amount, date, location }).then(() => {
+      ToastAndroid.show("Transaction Added", ToastAndroid.SHORT);
+      onPressBack();
+    });
   };
+
   return (
     <AppContainer>
       <AppHeader
@@ -40,11 +57,16 @@ const AddTransactionScreen: React.FC<AddTransactionScreenProps> = (props) => {
           onChangeText={(t) => setAmount(t)}
         />
         <AppTextInput
+          placeholder={"Enter Location"}
+          value={location}
+          onChangeText={(t) => setLocation(t)}
+        />
+        <AppTextInput
           placeholder={"Enter Date"}
           value={date}
           onChangeText={(t) => setDate(t)}
         />
-        <TouchableOpacity style={styles.submitTouch}>
+        <TouchableOpacity style={styles.submitTouch} onPress={addTransaction}>
           <Text style={styles.submitText}>{"Submit"}</Text>
         </TouchableOpacity>
       </View>

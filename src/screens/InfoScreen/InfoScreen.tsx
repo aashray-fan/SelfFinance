@@ -1,13 +1,47 @@
 // Library Imports
 import { StyleSheet, Text, View } from "react-native";
 import _ from "lodash";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
+
 // Relative Imports
 import { AppContainer, AppHeader } from "../../components";
 import { Color, Responsive } from "../../utils";
-import { transactionList } from "../../utils/Data";
+import { useFocusEffect } from "@react-navigation/native";
+
+const SUMMARY_COLLECTION = "summary";
+const FirestoreSummary2024 = firestore()
+  .collection(SUMMARY_COLLECTION)
+  .doc("2024");
 
 const InfoScreen = () => {
+  const [totalTransactions, setTotalTransactions] = useState("");
+  const [totalAmount, setTotalAmount] = useState("");
+  const [maxTransaction, setMaxTransaction] = useState({});
+  const [minTransaction, setMinTransaction] = useState({});
+
+  useEffect(() => {
+    FirestoreSummary2024.get().then((doc) => {
+      const data = doc.data();
+      setTotalTransactions(data?.totalTransactions);
+      setTotalAmount(data?.totalAmount);
+      setMaxTransaction(data?.maxTransaction);
+      setMinTransaction(data?.minTransaction);
+    });
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      FirestoreSummary2024.get().then((doc) => {
+        const data = doc.data();
+        setTotalTransactions(data?.totalTransactions);
+        setTotalAmount(data?.totalAmount);
+        setMaxTransaction(data?.maxTransaction);
+        setMinTransaction(data?.minTransaction);
+      });
+    }, [])
+  );
+
   const renderItem = (title: string, answer: string) => {
     return (
       <View style={styles.smallItemView}>
@@ -31,17 +65,17 @@ const InfoScreen = () => {
     );
   };
 
-  const balance = _.sumBy(transactionList, (item) => Number(item?.amount));
-  const high = _.maxBy(transactionList, (item) => Number(item?.amount));
-  const low = _.minBy(transactionList, (item) => Number(item?.amount));
+  // const balance = _.sumBy(transactionList, (item) => Number(item?.amount));
+  // const high = _.maxBy(transactionList, (item) => Number(item?.amount));
+  // const low = _.minBy(transactionList, (item) => Number(item?.amount));
   return (
     <AppContainer>
       <AppHeader titleText={"Summary"} />
       <View style={styles.mainContainer}>
-        {renderItem("Transactions", transactionList?.length.toString())}
-        {renderItem("Balance", `$${balance}`)}
-        {renderBigItem("High Spending", high)}
-        {renderBigItem("Low Spending", low)}
+        {renderItem("Transactions", totalTransactions)}
+        {renderItem("Balance", `$${totalAmount}`)}
+        {renderBigItem("High Spending", maxTransaction)}
+        {renderBigItem("Low Spending", minTransaction)}
       </View>
     </AppContainer>
   );

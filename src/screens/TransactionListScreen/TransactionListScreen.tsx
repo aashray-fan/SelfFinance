@@ -12,8 +12,13 @@ import firestore from "@react-native-firebase/firestore";
 // Relative Imports
 import { AppContainer, AppHeader } from "../../components";
 import { Color, Images, Responsive, Screen } from "../../utils";
+import _ from "lodash";
 
 const TRANSACTION_LIST = "transactions";
+const SUMMARY_COLLECTION = "summary";
+const FirestoreSummary2024 = firestore()
+  .collection(SUMMARY_COLLECTION)
+  .doc("2024");
 const FirestoreTransactions = firestore().collection(TRANSACTION_LIST);
 
 interface TransactionListScreenProps {
@@ -42,9 +47,29 @@ const TransactionListScreen: React.FC<TransactionListScreenProps> = (props) => {
     FirestoreTransactions.get().then(setReceivedData);
   };
 
+  const saveSummary = (summary: any) => {
+    FirestoreSummary2024.set(summary);
+  };
+
+  const calculateSummary = (list) => {
+    const totalTransactions = list?.length.toString();
+    const totalAmount = _.sumBy(list, (item) => Number(item?.amount))
+      .toFixed(2)
+      .toString();
+    const maxTransaction = _.maxBy(list, (item) => Number(item?.amount));
+    const minTransaction = _.minBy(list, (item) => Number(item?.amount));
+    saveSummary({
+      totalTransactions,
+      totalAmount,
+      maxTransaction,
+      minTransaction,
+    });
+  };
+
   const setReceivedData = (transactions: any) => {
-    const tempList = [];
+    const tempList: any[] | ((prevState: never[]) => never[]) = [];
     transactions.docs.map((doc: any) => tempList.push(doc.data()));
+    calculateSummary(tempList);
     setTransactionList(tempList);
   };
 
