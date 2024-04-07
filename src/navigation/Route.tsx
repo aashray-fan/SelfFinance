@@ -9,6 +9,8 @@ import {
   InfoScreen,
   TransactionDetailScreen,
   TransactionListScreen,
+  IntroScreen,
+  SignUpScreen,
 } from "../screens";
 import { Screen } from "../utils";
 import { AppTabBar } from "../components";
@@ -35,19 +37,34 @@ const TransactionStack = () => {
   );
 };
 
+const MainTab = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{ headerShown: false }}
+      tabBar={(props) => <AppTabBar {...props} />}
+    >
+      <Tab.Screen name={Screen.TransactionStack} component={TransactionStack} />
+      <Tab.Screen name={Screen.InfoScreen} component={InfoScreen} />
+    </Tab.Navigator>
+  );
+};
+
+const AuthStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name={Screen.IntroScreen} component={IntroScreen} />
+      <Stack.Screen name={Screen.SignUpScreen} component={SignUpScreen} />
+    </Stack.Navigator>
+  );
+};
+
 const Route = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{ headerShown: false }}
-        tabBar={(props) => <AppTabBar {...props} />}
-      >
-        <Tab.Screen
-          name={Screen.TransactionStack}
-          component={TransactionStack}
-        />
-        <Tab.Screen name={Screen.InfoScreen} component={InfoScreen} />
-      </Tab.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name={Screen.AuthStack} component={AuthStack} />
+        <Stack.Screen name={Screen.MainTab} component={MainTab} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

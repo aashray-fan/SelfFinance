@@ -10,7 +10,12 @@ import React, { useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 
 // Relative Imports
-import { AppHeader, AppContainer, AppTextInput } from "../../components";
+import {
+  AppHeader,
+  AppContainer,
+  AppTextInput,
+  AppButton,
+} from "../../components";
 import { Color, Responsive } from "../../utils";
 
 const TRANSACTION_LIST = "transactions";
@@ -66,9 +71,7 @@ const AddTransactionScreen: React.FC<AddTransactionScreenProps> = (props) => {
           value={date}
           onChangeText={(t) => setDate(t)}
         />
-        <TouchableOpacity style={styles.submitTouch} onPress={addTransaction}>
-          <Text style={styles.submitText}>{"Submit"}</Text>
-        </TouchableOpacity>
+        <AppButton title={"Submit"} onPress={addTransaction} />
       </View>
     </AppContainer>
   );
@@ -82,19 +85,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: Responsive.verticalScale(40),
     paddingHorizontal: Responsive.scale(10),
-  },
-  submitTouch: {
-    width: "40%",
-    paddingVertical: Responsive.verticalScale(10),
-    borderRadius: 10,
-    backgroundColor: Color.themeOrange,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: Responsive.verticalScale(20),
-  },
-  submitText: {
-    color: Color.black,
-    fontSize: Responsive.font(4.5),
-    fontWeight: "600",
   },
 });
