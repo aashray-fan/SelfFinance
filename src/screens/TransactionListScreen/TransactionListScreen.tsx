@@ -16,10 +16,6 @@ import _ from "lodash";
 
 const TRANSACTION_LIST = "transactions";
 const SUMMARY_COLLECTION = "summary";
-const FirestoreSummary2024 = firestore()
-  .collection(SUMMARY_COLLECTION)
-  .doc("2024");
-const FirestoreTransactions = firestore().collection(TRANSACTION_LIST);
 
 interface TransactionListScreenProps {
   navigation: any;
@@ -27,6 +23,17 @@ interface TransactionListScreenProps {
 
 const TransactionListScreen: React.FC<TransactionListScreenProps> = (props) => {
   const [transactionList, setTransactionList] = useState([]);
+
+  const FirestoreSummary2024 = firestore()
+    .collection("users")
+    .doc(global?.user?.uid)
+    .collection(SUMMARY_COLLECTION)
+    .doc("2024");
+  const FirestoreTransactions = firestore()
+    .collection("users")
+    .doc(global?.user?.uid || "")
+    .collection(TRANSACTION_LIST);
+
   const onPressItem = (item: any) => {
     const { navigation } = props;
     navigation.navigate(Screen.TransactionDetailScreen, { item });
@@ -44,7 +51,11 @@ const TransactionListScreen: React.FC<TransactionListScreenProps> = (props) => {
   }, []);
 
   const getTransactionList = async () => {
-    FirestoreTransactions.get().then(setReceivedData);
+    FirestoreTransactions.get()
+      .then(setReceivedData)
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
   };
 
   const saveSummary = (summary: any) => {
@@ -52,23 +63,25 @@ const TransactionListScreen: React.FC<TransactionListScreenProps> = (props) => {
   };
 
   const calculateSummary = (list) => {
-    const totalTransactions = list?.length.toString();
-    const totalAmount = _.sumBy(list, (item) => Number(item?.amount))
-      .toFixed(2)
-      .toString();
-    const maxTransaction = _.maxBy(list, (item) => Number(item?.amount));
-    const minTransaction = _.minBy(list, (item) => Number(item?.amount));
-    saveSummary({
-      totalTransactions,
-      totalAmount,
-      maxTransaction,
-      minTransaction,
-    });
+    if (list?.length > 0) {
+      const totalTransactions = list?.length.toString();
+      const totalAmount = _.sumBy(list, (item) => Number(item?.amount))
+        .toFixed(2)
+        .toString();
+      const maxTransaction = _.maxBy(list, (item) => Number(item?.amount));
+      const minTransaction = _.minBy(list, (item) => Number(item?.amount));
+      saveSummary({
+        totalTransactions,
+        totalAmount,
+        maxTransaction,
+        minTransaction,
+      });
+    }
   };
 
   const setReceivedData = (transactions: any) => {
     const tempList: any[] | ((prevState: never[]) => never[]) = [];
-    transactions.docs.map((doc: any) => tempList.push(doc.data()));
+    transactions?.docs.map((doc: any) => tempList.push(doc.data()));
     calculateSummary(tempList);
     setTransactionList(tempList);
   };

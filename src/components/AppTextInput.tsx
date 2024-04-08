@@ -9,10 +9,11 @@ interface AppTextInputProps {
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
+  isPassword?: boolean;
 }
 
 const AppTextInput: React.FC<AppTextInputProps> = (props) => {
-  const { placeholder, value, onChangeText } = props;
+  const { placeholder, value, onChangeText, isPassword } = props;
   return (
     <View style={styles.container}>
       <TextInput
@@ -21,6 +22,7 @@ const AppTextInput: React.FC<AppTextInputProps> = (props) => {
         placeholder={placeholder}
         placeholderTextColor={Color.white}
         style={styles.input}
+        secureTextEntry={isPassword}
       />
     </View>
   );
@@ -32,6 +34,7 @@ AppTextInput.defaultProps = {
   placeholder: "",
   value: "",
   onChangeText: () => {},
+  isPassword: false,
 };
 
 const styles = StyleSheet.create({

@@ -21,6 +21,7 @@ const IntroScreen: React.FC<IntroScreenProps> = (props) => {
 
   const onPressLogIn = () => {
     console.log("Log In");
+    navigation.navigate(Screen.LogInScreen);
   };
 
   return (

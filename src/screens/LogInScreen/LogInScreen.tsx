@@ -1,39 +1,32 @@
+// Library Imports
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
+// Relative Imports
 import { AppButton, AppContainer, AppTextInput } from "../../components";
 import { Color, Responsive, Screen } from "../../utils";
 import { Auth } from "../../firebase";
 
-interface SignUpScreenProps {
+interface LogInScreenProps {
   navigation: any;
   route: any;
 }
 
-const SignUpScreen: React.FC<SignUpScreenProps> = (props) => {
-  const { navigation } = props;
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+const LogInScreen: React.FC<LogInScreenProps> = (props) => {
+  const { navigation, route } = props;
+  const [email, setEmail] = useState(route?.params?.email || "");
   const [password, setPassword] = useState("");
 
-  const onSubmit = () => {
-    if (!name || !email || !password) {
-      return;
-    }
-    Auth.signUp({ name, email, password, navigation });
+  const onPressSubmit = () => {
+    Auth.signIn({ email, password, navigation });
   };
-  const onPressLogIn = () => {
-    navigation.replace(Screen.LogInScreen, { email });
+  const onPressSignUp = () => {
+    navigation.replace(Screen.SignUpScreen);
   };
 
   return (
     <AppContainer>
       <View style={styles.mainContainer}>
-        <Text style={styles.titleText}>{"SignUp"}</Text>
-        <AppTextInput
-          placeholder={"Enter Name"}
-          value={name}
-          onChangeText={(t) => setName(t)}
-        />
+        <Text style={styles.titleText}>{"LogIn"}</Text>
         <AppTextInput
           placeholder={"Enter Email"}
           value={email}
@@ -45,11 +38,11 @@ const SignUpScreen: React.FC<SignUpScreenProps> = (props) => {
           isPassword={true}
           onChangeText={(t) => setPassword(t)}
         />
-        <AppButton title={"SignUp"} onPress={onSubmit} style={styles.btn} />
+        <AppButton title={"LogIn"} onPress={onPressSubmit} style={styles.btn} />
         <Text style={styles.bottomText}>
-          {"Already have an account? "}
-          <Text style={styles.loginText} onPress={onPressLogIn}>
-            {"LogIn"}
+          {"Don't have an account? "}
+          <Text style={styles.loginText} onPress={onPressSignUp}>
+            {"SignUp"}
           </Text>
         </Text>
       </View>
@@ -57,15 +50,13 @@ const SignUpScreen: React.FC<SignUpScreenProps> = (props) => {
   );
 };
 
-export default SignUpScreen;
+export default LogInScreen;
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: Color.white,
+    justifyContent: "center",
     alignItems: "center",
-    paddingVertical: Responsive.verticalScale(150),
-    // justifyContent: "center",
   },
   titleText: {
     fontSize: Responsive.font(7),

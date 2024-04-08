@@ -11,9 +11,14 @@ import {
   TransactionListScreen,
   IntroScreen,
   SignUpScreen,
+  LogInScreen,
 } from "../screens";
 import { Screen } from "../utils";
 import { AppTabBar } from "../components";
+
+interface RouteProps {
+  isLogIn: boolean;
+}
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -54,14 +59,19 @@ const AuthStack = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={Screen.IntroScreen} component={IntroScreen} />
       <Stack.Screen name={Screen.SignUpScreen} component={SignUpScreen} />
+      <Stack.Screen name={Screen.LogInScreen} component={LogInScreen} />
     </Stack.Navigator>
   );
 };
 
-const Route = () => {
+const Route: React.FC<RouteProps> = (props) => {
+  const { isLogIn } = props;
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={isLogIn ? Screen.MainTab : Screen.AuthStack}
+      >
         <Stack.Screen name={Screen.AuthStack} component={AuthStack} />
         <Stack.Screen name={Screen.MainTab} component={MainTab} />
       </Stack.Navigator>

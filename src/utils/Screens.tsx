@@ -8,7 +8,7 @@ const Screen = {
   AuthStack: "AuthStack",
   MainTab: "MainTab",
   SignUpScreen: "SignUpScreen",
-  LoginScreen: "LoginScreen",
+  LogInScreen: "LogInScreen",
 };
 
 export default Screen;

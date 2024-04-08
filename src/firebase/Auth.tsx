@@ -11,24 +11,24 @@ interface User {
 
 const signUp = (reqData: any) => {
   // Registration
-  const { email, password, displayName, navigation, isMerchant } = reqData;
+  const { email, password, name, navigation } = reqData;
   auth()
     .createUserWithEmailAndPassword(email, password)
     .then(async (resData) => {
       //   console.log("User account created & signed in!", resData);
 
       // Setting Up Display Name of User
-      await auth().currentUser?.updateProfile({ displayName });
+      await auth().currentUser?.updateProfile({ displayName: name });
 
       // Firestore User Creation Query
       const firestoreObj = {
         email,
-        displayName,
+        name,
         userId: auth()?.currentUser?.uid,
         uid: auth()?.currentUser?.uid,
-        isMerchant,
       };
       //   console.log(firestoreObj, "firestoreObj");
+      Firestore.createUser(firestoreObj);
       (global as any).user = auth()?.currentUser;
     })
     .catch((error) => {
@@ -36,7 +36,7 @@ const signUp = (reqData: any) => {
         Utility.showToast(
           "That email address is already in use!, Please try to Log In"
         );
-        navigation.navigate(Screen.LoginScreen);
+        navigation.navigate(Screen.LogInScreen);
       }
 
       if (error.code === "auth/invalid-email") {
@@ -53,13 +53,12 @@ const signIn = async (reqData: any) => {
   auth()
     .signInWithEmailAndPassword(email, password)
     .then(async (resData) => {
-      console.log("Log In Success", resData);
-
-      // Store User
-      Storage.setUserData(auth()?.currentUser);
 
       // Firestore User Data Fetch
       const userData = await Firestore.getUser(auth()?.currentUser?.uid ?? "");
+
+      // Store User
+      Storage.setUserData({ ...userData, firebaseUser: auth()?.currentUser });
 
       // Stack Change
       navigation.replace(Screen.MainTab);

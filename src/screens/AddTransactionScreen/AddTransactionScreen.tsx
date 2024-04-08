@@ -19,7 +19,6 @@ import {
 import { Color, Responsive } from "../../utils";
 
 const TRANSACTION_LIST = "transactions";
-const FirestoreTransactions = firestore().collection(TRANSACTION_LIST);
 
 // Interface
 interface AddTransactionScreenProps {
@@ -33,6 +32,11 @@ const AddTransactionScreen: React.FC<AddTransactionScreenProps> = (props) => {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
+
+  const FirestoreTransactions = firestore()
+    .collection("users")
+    .doc(global?.user?.uid)
+    .collection(TRANSACTION_LIST);
 
   const onPressBack = () => navigation.goBack();
 
