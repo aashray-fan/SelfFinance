@@ -30,6 +30,8 @@ const signUp = (reqData: any) => {
       //   console.log(firestoreObj, "firestoreObj");
       Firestore.createUser(firestoreObj);
       (global as any).user = auth()?.currentUser;
+
+      navigation.replace(Screen.LogInScreen);
     })
     .catch((error) => {
       if (error.code === "auth/email-already-in-use") {
@@ -53,7 +55,6 @@ const signIn = async (reqData: any) => {
   auth()
     .signInWithEmailAndPassword(email, password)
     .then(async (resData) => {
-
       // Firestore User Data Fetch
       const userData = await Firestore.getUser(auth()?.currentUser?.uid ?? "");
 
