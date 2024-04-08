@@ -82,6 +82,7 @@ const TransactionListScreen: React.FC<TransactionListScreenProps> = (props) => {
   const setReceivedData = (transactions: any) => {
     const tempList: any[] | ((prevState: never[]) => never[]) = [];
     transactions?.docs.map((doc: any) => tempList.push(doc.data()));
+    // console.log("tempList", tempList);
     calculateSummary(tempList);
     setTransactionList(tempList);
   };

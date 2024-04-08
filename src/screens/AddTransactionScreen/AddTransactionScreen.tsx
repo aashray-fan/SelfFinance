@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import firestore from "@react-native-firebase/firestore";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 // Relative Imports
 import {
@@ -30,8 +31,9 @@ const AddTransactionScreen: React.FC<AddTransactionScreenProps> = (props) => {
   const { navigation } = props;
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(null);
   const [location, setLocation] = useState("");
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const FirestoreTransactions = firestore()
     .collection("users")
@@ -41,10 +43,28 @@ const AddTransactionScreen: React.FC<AddTransactionScreenProps> = (props) => {
   const onPressBack = () => navigation.goBack();
 
   const addTransaction = () => {
+    if (!title || !amount || !date || !location) {
+      ToastAndroid.show("Please fill all fields", ToastAndroid.SHORT);
+      return;
+    }
     FirestoreTransactions.add({ title, amount, date, location }).then(() => {
       ToastAndroid.show("Transaction Added", ToastAndroid.SHORT);
       onPressBack();
     });
+  };
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const onChangeDate = (event, selectedDate) => {
+    // console.log(selectedDate, "selectedDate");
+    const formattedDate = formatDate(selectedDate);
+    setDate(formattedDate);
+    setIsPickerOpen(false);
   };
 
   return (
@@ -70,12 +90,21 @@ const AddTransactionScreen: React.FC<AddTransactionScreenProps> = (props) => {
           value={location}
           onChangeText={(t) => setLocation(t)}
         />
-        <AppTextInput
-          placeholder={"Enter Date"}
-          value={date}
-          onChangeText={(t) => setDate(t)}
+        <AppButton
+          title={date || "Enter Date"}
+          style={styles.dateTouch}
+          textStyle={styles.text}
+          onPress={() => setIsPickerOpen(true)}
         />
         <AppButton title={"Submit"} onPress={addTransaction} />
+        {isPickerOpen && (
+          <DateTimePicker
+            value={new Date()}
+            mode="date"
+            display="default"
+            onChange={onChangeDate}
+          />
+        )}
       </View>
     </AppContainer>
   );
@@ -89,5 +118,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: Responsive.verticalScale(40),
     paddingHorizontal: Responsive.scale(10),
+  },
+  dateTouch: {
+    width: "90%",
+    height: Responsive.verticalScale(50),
+    borderRadius: 10,
+    backgroundColor: Color.themeBlue,
+    alignItems: "flex-start",
+    paddingHorizontal: Responsive.scale(10),
+    marginVertical: Responsive.verticalScale(5),
+  },
+  text: {
+    color: Color.themeOrange,
+    fontSize: Responsive.font(4.5),
+    fontWeight: "600",
   },
 });

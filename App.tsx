@@ -16,7 +16,7 @@ const App = () => {
     const userData = await Storage.getUserData();
     if (userData) {
       global.user = userData;
-      console.log(userData);
+      // console.log(userData, "userData");
       setIsLogIn(true);
       setTimeout(() => {
         setIsLoading(false);
@@ -31,7 +31,7 @@ const App = () => {
       {isLoading ? (
         <View style={styles.container}>
           <Text style={styles.titleText}>{"SelfFinance"}</Text>
-          <ActivityIndicator size={"large"} />
+          <ActivityIndicator size={"large"} color={Color.themeBlue} />
         </View>
       ) : (
         <Route isLogIn={isLogIn} />

@@ -1,5 +1,5 @@
 // Library Imports
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import React, { useState } from "react";
 // Relative Imports
 import { AppButton, AppContainer, AppTextInput } from "../../components";
@@ -17,6 +17,10 @@ const LogInScreen: React.FC<LogInScreenProps> = (props) => {
   const [password, setPassword] = useState("");
 
   const onPressSubmit = () => {
+    if (!email || !password) {
+      ToastAndroid.show("Please fill all fields", ToastAndroid.SHORT);
+      return;
+    }
     Auth.signIn({ email, password, navigation });
   };
   const onPressSignUp = () => {

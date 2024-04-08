@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import React, { useState } from "react";
 import { AppButton, AppContainer, AppTextInput } from "../../components";
 import { Color, Responsive, Screen } from "../../utils";
@@ -17,6 +17,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = (props) => {
 
   const onSubmit = () => {
     if (!name || !email || !password) {
+      ToastAndroid.show("Please fill all fields", ToastAndroid.SHORT);
       return;
     }
     Auth.signUp({ name, email, password, navigation });
