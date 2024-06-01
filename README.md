@@ -1,4 +1,6 @@
-# INFO6132 - Final Project
-This Repository is Final Project of Adv Topics in Mobile Development SEM3 Winter 2024 Program from Aashray Bavisa
+# Self Finance
 
+A mobile application to track your expenses.
+
+## Tech Description
 Financial App demonstrating React Navigation, Firebase Authentication, Firestore and session persistance.
